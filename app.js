@@ -120,6 +120,22 @@ var budgetController = (function(){
              document.querySelector(element).insertAdjacentHTML('beforeend',newhtml);
          },
          
+         clearFields: function(){
+             var fields,fieldArr;
+             
+             fields = document.querySelectorAll(DOMstrings.inputDescription+','+DOMstrings.inputValue);
+             
+              fieldArr = Array.prototype.slice.call(fields);
+             
+             fieldArr.forEach(function(current, index, array){
+                 current.value = "";
+             });
+             
+             fieldArr[0].focus();
+         },
+         
+         
+         
          getDOMStrings: function(){
              return DOMstrings;
          }
@@ -160,6 +176,9 @@ var controller = (function(budgetctrl, UICtrl){
        
         
         UICtrl.addListItem(newItem,input.type);
+        
+        // Clear the fields
+        UICtrl.clearFields();
        // 4. Calculate the budget
        
        //5. Display the budget on the UI
