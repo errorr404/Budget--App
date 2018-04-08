@@ -178,13 +178,14 @@ var budgetController = (function(){
          expanseLabl: '.budget__expenses--value',
          percentageLabel: '.budget__expenses--percentage',
          container: '.container',
-         expensepercentagelabel: '.item__percentage'
+         expensepercentagelabel: '.item__percentage',
+         dateLabel: '.budget__title--month'
          
      };
      
    var formatNumber = function(num,type){
            
-             var numSplit,int,dec;
+             var numSplit,int,dec; 
              /*
              + or - before number
              exacttly 2 decimal points
@@ -206,6 +207,13 @@ var budgetController = (function(){
              
              
          };
+     
+        var nodeListForEach = function(list, callback){
+                  for(var i=0;i<list.length;i++)
+                      {
+                          callback(list[i], i);
+                      }
+              };
          
      
     
@@ -279,10 +287,10 @@ var budgetController = (function(){
              document.querySelector(DOMstrings.budgetLabel).textContent = formatNumber(obj.budget,type);
              document.querySelector(DOMstrings.incomeLabel).textContent = formatNumber(obj.totalInc,'inc');
              document.querySelector(DOMstrings.expanseLabl).textContent = formatNumber(obj.totalExp,'exp');
-             //document.querySelector(DOMstrings.percentageLabel).textContent = obj.percentage;
-             document.querySelector('.budget__expenses--percentage').textContent = obj.percentage;
+            // document.querySelector(DOMstrings.percentageLabel).textContent = obj.percentage;
+            // document.querySelector('.budget__expenses--percentage').textContent = obj.percentage;
              
-             if(obj.percentage>0){
+             if(obj.percentage> 0){
                   document.querySelector('.budget__expenses--percentage').textContent = obj.percentag + '%';
              }
              else{
@@ -296,12 +304,7 @@ var budgetController = (function(){
            
            var fields = document.querySelectorAll(DOMstrings.expensepercentagelabel);
              
-              nodeListForEach = function(list, callback){
-                  for(var i=0;i<list.length;i++)
-                      {
-                          callback(list[i], i);
-                      }
-              };
+          
              
              nodeListForEach(fields, function(current, index){
                  
@@ -314,7 +317,32 @@ var budgetController = (function(){
              
          },
          
-        
+        displayMonth: function(){
+            
+            var now = new Date();
+           // var christmas = new date(26,11,25);
+            var year = now.getFullYear(); // return the current year
+            var months=['January','February','March','April','June','July','August','September','October','November','December'];
+            var month = now.getMonth();
+            
+            document.querySelector(DOMstrings.dateLabel).textContent = months[month]+' '+year;
+            
+        },
+         
+         changedType: function(){
+              
+             var fields = document.querySelectorAll(
+             DOMstrings.inputType + ','+
+                 DOMstrings.inputDescription+ ','+
+                 DOMstrings.inputValue );
+             
+             nodeListForEach(fields,function(cur){
+                 cur.classList.toggle('red-focus');
+             });
+             
+             document.querySelector(DOMstrings.inputBtn).classList.toggle('red');
+         },
+         
          
          getDOMStrings: function(){
              return DOMstrings;
@@ -339,6 +367,8 @@ var controller = (function(budgetctrl, UICtrl){
                               }); 
         
         document.querySelector(DOM.container).addEventListener('click',ctrlDeleteItem);
+        
+        document.querySelector(DOM.inputType).addEventListener('change',UICtrl.chagedType);
         
     };
     
@@ -431,6 +461,7 @@ var controller = (function(budgetctrl, UICtrl){
     };
     return {
         init: function(){
+            UIController.displayMonth();
            UIController.displayBudget({
                
                budget: 0,
